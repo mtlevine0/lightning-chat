@@ -2,11 +2,14 @@ package com.mtlevine0.lightningchat.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,6 +24,12 @@ public class User implements UserDetails{
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
+	@OneToMany
+	List<Message> messages = new ArrayList<Message>();
+	
+	@ManyToMany
+	List<MessageThread> threads = new ArrayList<MessageThread>();
+	
 	String username;
 	String password;
 	ArrayList<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
@@ -30,6 +39,12 @@ public class User implements UserDetails{
 	}
 	public void setId(Long id) {
 		this.id = id;
+	}
+	public List<Message> getMessages() {
+		return messages;
+	}
+	public void setMessages(List<Message> messages) {
+		this.messages = messages;
 	}
 	public String getUsername() {
 		return username;
@@ -43,9 +58,13 @@ public class User implements UserDetails{
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public void addAuthority(SimpleGrantedAuthority authority) {
-		this.authorities.add(authority);
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
+	public void setAuthorities(ArrayList<SimpleGrantedAuthority> authorities) {
+		this.authorities = authorities;
+	}
+	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return authorities;
@@ -65,6 +84,16 @@ public class User implements UserDetails{
 	@Override
 	public boolean isEnabled() {
 		return true;
+	}
+	
+	public void addAuthority(SimpleGrantedAuthority simpleGrantedAuthority) {
+		this.authorities.add(simpleGrantedAuthority);
+	}
+	public List<MessageThread> getThreads() {
+		return threads;
+	}
+	public void setThreads(List<MessageThread> threads) {
+		this.threads = threads;
 	}
 	
 }
