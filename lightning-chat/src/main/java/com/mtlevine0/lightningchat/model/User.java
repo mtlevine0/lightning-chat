@@ -2,18 +2,28 @@ package com.mtlevine0.lightningchat.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 public class User implements UserDetails{
@@ -24,15 +34,24 @@ public class User implements UserDetails{
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
-	@OneToMany
-	List<Message> messages = new ArrayList<Message>();
+	@JsonIgnoreProperties("user")
+	@OneToMany(mappedBy="user", cascade = {CascadeType.ALL})
+	Set<Message> messages;
 	
-	@ManyToMany
+	@JsonIgnoreProperties("users")
+	@ManyToMany(mappedBy = "users")
 	List<MessageThread> threads = new ArrayList<MessageThread>();
 	
+	@Column(unique = true)
 	String username;
 	String password;
 	ArrayList<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
+	
+	@CreationTimestamp
+	@DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "create_date")
+	private Date creationDate;
 	
 	public Long getId() {
 		return id;
@@ -40,10 +59,10 @@ public class User implements UserDetails{
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public List<Message> getMessages() {
+	public Set<Message> getMessages() {
 		return messages;
 	}
-	public void setMessages(List<Message> messages) {
+	public void setMessages(Set<Message> messages) {
 		this.messages = messages;
 	}
 	public String getUsername() {
@@ -94,6 +113,12 @@ public class User implements UserDetails{
 	}
 	public void setThreads(List<MessageThread> threads) {
 		this.threads = threads;
+	}
+	public Date getCreationDate() {
+		return creationDate;
+	}
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
 	}
 	
 }

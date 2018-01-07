@@ -41,6 +41,11 @@ public class DefaultUserService implements UserService {
 		
 		return userRepository.save(user);
 	}
+	
+	@Override
+	public User update(User user) {
+		return userRepository.save(user);
+	}
 
 	@Override
 	public void removeById(Long id) {
