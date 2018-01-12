@@ -1,6 +1,7 @@
 package com.mtlevine0.lightningchat.service;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,17 +29,15 @@ public class DefaultMessageThreadService implements MessageThreadService {
 		
 		user = userService.findById(user.getId());
 		
-		List<MessageThread> threads = user.getThreads();
-		
 		MessageThread thread = messageThreadRepository.findOne(threadId);
+				
+		Set<User> users = thread.getUsers();
 		
-		threads.add(thread);
+		users.add(user);
 		
-		user.setThreads(threads);
+		thread.setUsers(users);
 		
-		userService.add(user);
-		
-		return messageThreadRepository.findOne(threadId);
+		return messageThreadRepository.save(thread);
 	}
 
 	@Override

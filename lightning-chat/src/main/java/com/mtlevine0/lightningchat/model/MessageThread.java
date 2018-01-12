@@ -3,6 +3,7 @@ package com.mtlevine0.lightningchat.model;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -29,14 +30,13 @@ public class MessageThread {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
-	@JsonIgnoreProperties("threads")
-	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
     	name = "messageThread_message",
     	joinColumns = @JoinColumn(name = "messageThread_id"),
     	inverseJoinColumns = @JoinColumn(name = "message_id")
     )
-	private List<User> users = new ArrayList<User>();
+	private Set<User> users;
 	
 	@JsonIgnoreProperties("thread")
 	@OneToMany(mappedBy="thread", cascade = {CascadeType.ALL})
@@ -65,11 +65,11 @@ public class MessageThread {
 		this.id = id;
 	}
 
-	public List<User> getUsers() {
+	public Set<User> getUsers() {
 		return users;
 	}
 
-	public void setUsers(List<User> users) {
+	public void setUsers(Set<User> users) {
 		this.users = users;
 	}
 
