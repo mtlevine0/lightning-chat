@@ -1,18 +1,21 @@
 package com.mtlevine0.lightningchat.model;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,13 +27,19 @@ public class User implements UserDetails{
 	private static final long serialVersionUID = -7773893815119106817L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+	@GeneratedValue(generator = "UUID")
+	@GenericGenerator(
+		name = "UUID",
+		strategy = "org.hibernate.id.UUIDGenerator"
+	)
+	private UUID id;
 	
 	@Column(unique = true)
 	String username;
 	String password;
-	ArrayList<SimpleGrantedAuthority> authorities = new ArrayList<SimpleGrantedAuthority>();
+	
+	@ElementCollection
+	Set<SimpleGrantedAuthority> authorities = new HashSet<SimpleGrantedAuthority>();
 	
 	@CreationTimestamp
 	@DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
@@ -38,11 +47,11 @@ public class User implements UserDetails{
 	@Column(name = "create_date")
 	private Date creationDate;
 	
-	public Long getId() {
+	public UUID getId() {
 		return id;
 	}
 	
-	public void setId(Long id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 	
@@ -66,7 +75,7 @@ public class User implements UserDetails{
 		return serialVersionUID;
 	}
 	
-	public void setAuthorities(ArrayList<SimpleGrantedAuthority> authorities) {
+	public void setAuthorities(Set<SimpleGrantedAuthority> authorities) {
 		this.authorities = authorities;
 	}
 	

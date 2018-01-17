@@ -1,6 +1,7 @@
 package com.mtlevine0.lightningchat.service;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,7 +23,7 @@ public class DefaultUserService implements UserService {
 	}
 
 	@Override
-	public User findById(Long id) {
+	public User findById(UUID id) {
 		return userRepository.findOne(id);
 	}
 	
@@ -48,7 +49,7 @@ public class DefaultUserService implements UserService {
 	}
 
 	@Override
-	public void removeById(Long id) {
+	public void removeById(UUID id) {
 		userRepository.delete(id);
 	}
 

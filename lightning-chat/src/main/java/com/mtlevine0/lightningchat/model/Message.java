@@ -18,7 +18,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 public class Message {
@@ -34,7 +33,6 @@ public class Message {
 	@JoinColumn(name = "thread_id")
 	private MessageThread thread;
 	
-	@JsonIgnoreProperties("messages")
 	@ManyToOne(fetch = FetchType.EAGER)
 	private User user;
 	
