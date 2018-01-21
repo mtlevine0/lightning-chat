@@ -9,6 +9,7 @@ import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
@@ -38,7 +39,7 @@ public class User implements UserDetails{
 	String username;
 	String password;
 	
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	Set<SimpleGrantedAuthority> authorities = new HashSet<SimpleGrantedAuthority>();
 	
 	@CreationTimestamp
