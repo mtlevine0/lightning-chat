@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mtlevine0.lightningchat.model.User;
+import com.mtlevine0.lightningchat.model.dto.UserDTO;
+import com.mtlevine0.lightningchat.model.dto.UserRegisterDTO;
 import com.mtlevine0.lightningchat.service.AsyncService;
 import com.mtlevine0.lightningchat.service.UserService;
 
@@ -28,15 +29,15 @@ public class UserResource {
 	
 	@Autowired
 	AsyncService asyncService;
-	
+		
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<User> create(@RequestBody User user) {
-		return new ResponseEntity<User>(userService.add(user), HttpStatus.OK);
+	public ResponseEntity<?> create(@RequestBody UserRegisterDTO user) {
+		return new ResponseEntity<UserDTO>(userService.add(user), HttpStatus.OK);
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<List<User>> findAll() {
-		return new ResponseEntity<List<User>>(userService.findAll(), HttpStatus.OK);
+	public ResponseEntity<?> findAll() {
+		return new ResponseEntity<List<UserDTO>>(userService.findAll(), HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/user_test", method = RequestMethod.GET)

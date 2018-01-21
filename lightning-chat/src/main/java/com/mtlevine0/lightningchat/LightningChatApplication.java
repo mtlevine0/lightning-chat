@@ -2,6 +2,8 @@ package com.mtlevine0.lightningchat;
 
 import java.util.concurrent.Executor;
 
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -28,5 +30,12 @@ public class LightningChatApplication {
         executor.initialize();
         
         return executor;
+    }
+    
+    @Bean
+    public ModelMapper modelMapper() {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STANDARD);
+        return modelMapper;
     }
 }

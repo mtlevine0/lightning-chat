@@ -3,12 +3,18 @@ package com.mtlevine0.lightningchat.service;
 import java.util.List;
 import java.util.Set;
 
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mtlevine0.lightningchat.model.Message;
 import com.mtlevine0.lightningchat.model.MessageThread;
 import com.mtlevine0.lightningchat.model.User;
+import com.mtlevine0.lightningchat.model.dto.MessageCreateDTO;
+import com.mtlevine0.lightningchat.model.dto.MessageDTO;
+import com.mtlevine0.lightningchat.model.dto.MessageThreadDTO;
+import com.mtlevine0.lightningchat.model.dto.UserDTO;
 import com.mtlevine0.lightningchat.repository.MessageRepository;
 import com.mtlevine0.lightningchat.repository.MessageThreadRepository;
 
@@ -24,10 +30,13 @@ public class DefaultMessageThreadService implements MessageThreadService {
 	@Autowired
 	UserService userService;
 
+	@Autowired
+	ModelMapper modelMapper;
+	
 	@Override
-	public MessageThread addUser(User user, Long threadId) {
+	public MessageThreadDTO addUser(UserDTO dto, Long threadId) {
 		
-		user = userService.findById(user.getId());
+		User user = userService.findById(dto.getId());
 		
 		MessageThread thread = messageThreadRepository.findOne(threadId);
 				
@@ -37,12 +46,12 @@ public class DefaultMessageThreadService implements MessageThreadService {
 		
 		thread.setUsers(users);
 		
-		return messageThreadRepository.save(thread);
+		return modelMapper.map(messageThreadRepository.save(thread), MessageThreadDTO.class);
 	}
 
 	@Override
-	public List<MessageThread> findAll() {
-		return messageThreadRepository.findAll();
+	public List<MessageThreadDTO> findAll() {
+		return modelMapper.map(messageThreadRepository.findAll(), new TypeToken<List<MessageThreadDTO>>() {}.getType());
 	}
 
 	@Override
@@ -51,7 +60,9 @@ public class DefaultMessageThreadService implements MessageThreadService {
 	}
 
 	@Override
-	public Message addMessage(Message message, Long threadId) {
+	public MessageDTO addMessage(MessageCreateDTO dto, Long threadId) {
+		
+		Message message = modelMapper.map(dto, Message.class);
 		
 		MessageThread thread = messageThreadRepository.findOne(threadId);
 		
@@ -61,7 +72,18 @@ public class DefaultMessageThreadService implements MessageThreadService {
 					
 		message.setUser(user);
 		
-		return messageRepository.save(message);
+//		return messageRepository.save(message);
+		return modelMapper.map(messageRepository.save(message), MessageDTO.class);
+	}
+
+	@Override
+	public List<MessageDTO> findMessage(Long threadId) {
+		
+		MessageThread thread = messageThreadRepository.findOne(threadId);
+		
+		List<MessageDTO> messageDTOList = modelMapper.map(thread.getMessages(),  new TypeToken<List<MessageDTO>>() {}.getType());
+		
+		return messageDTOList;
 	}
 	
 }
