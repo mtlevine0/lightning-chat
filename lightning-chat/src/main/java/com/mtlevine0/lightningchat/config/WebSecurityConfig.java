@@ -23,12 +23,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	DefaultUserDetailsService userDetailsService;
 	
+	@Autowired
+	RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+	
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-            .authorizeRequests()
-//                .antMatchers("/**").authenticated()
-//                .anyRequest().authenticated()
+        	.exceptionHandling()
+        		.authenticationEntryPoint(restAuthenticationEntryPoint)
+        	.and()
+            	.authorizeRequests()
+	            	.antMatchers("/console/**").permitAll()
+	                .antMatchers("/**").authenticated()
+	                .anyRequest().authenticated()
             .and()
             	.formLogin()
                 	.loginPage("/api/v1/login")

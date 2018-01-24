@@ -17,6 +17,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
 
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
 
 public class JWTAuthenticationFilter extends GenericFilterBean {
 
@@ -36,14 +38,22 @@ public class JWTAuthenticationFilter extends GenericFilterBean {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private Authentication getAuthentication(HttpServletRequest req) {
-		
+	private Authentication getAuthentication(HttpServletRequest req) {		
 		String jwt = req.getHeader("Authorization");
 		
-		if(jwt != null) {	
-			String user = Jwts.parser().setSigningKey("secret").parseClaimsJws(jwt).getBody().getSubject();
-			Collection<GrantedAuthority> authorities = (Collection<GrantedAuthority>) Jwts.parser().setSigningKey("secret").parseClaimsJws(jwt).getBody().get("roles");
-			
+		if(jwt != null) {
+			String user = null;
+			Collection<GrantedAuthority> authorities = null;
+			try{
+				user = Jwts.parser().setSigningKey("secret").parseClaimsJws(jwt).getBody().getSubject();
+				authorities = (Collection<GrantedAuthority>) Jwts.parser().setSigningKey("secret").parseClaimsJws(jwt).getBody().get("roles");
+			} catch(MalformedJwtException e) {
+				System.err.println(e);
+				return null;
+			} catch(SignatureException e) {
+				System.err.println(e);
+				return null;
+			}
 			String roleList = "";
 			for(Object authority: authorities) {
 				roleList = roleList + authority.toString().substring(11).replace("}", "") + ',';

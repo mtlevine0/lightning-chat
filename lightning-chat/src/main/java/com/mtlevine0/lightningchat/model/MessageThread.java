@@ -1,6 +1,7 @@
 package com.mtlevine0.lightningchat.model;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -13,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -38,7 +40,8 @@ public class MessageThread {
 	
 	@JsonIgnoreProperties("thread")
 	@OneToMany(mappedBy="thread", cascade = {CascadeType.ALL})
-	private Set<Message> messages;
+	@OrderBy("id ASC")
+	private List<Message> messages;
 	
     public void addMessage(Message message) {
     	messages.add(message);
@@ -71,11 +74,11 @@ public class MessageThread {
 		this.users = users;
 	}
 
-	public Set<Message> getMessages() {
+	public List<Message> getMessages() {
 		return messages;
 	}
 
-	public void setMessages(Set<Message> messages) {
+	public void setMessages(List<Message> messages) {
 		this.messages = messages;
 	}
 

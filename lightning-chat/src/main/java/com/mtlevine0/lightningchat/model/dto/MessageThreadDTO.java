@@ -1,5 +1,6 @@
 package com.mtlevine0.lightningchat.model.dto;
 
+import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -11,7 +12,7 @@ public class MessageThreadDTO {
 	private Set<UserDTO> users;
 	
 	@JsonIgnoreProperties("thread")
-	private Set<MessageDTO> messages;
+	private List<MessageDTO> messages;
 	
 	public Long getId() {
 		return id;
@@ -37,11 +38,11 @@ public class MessageThreadDTO {
 		this.users = users;
 	}
 	
-	public Set<MessageDTO> getMessages() {
+	public List<MessageDTO> getMessages() {
 		return messages;
 	}
 	
-	public void setMessages(Set<MessageDTO> messages) {
+	public void setMessages(List<MessageDTO> messages) {
 		this.messages = messages;
 	}
 
